@@ -1,0 +1,31 @@
+# usage : make --file=Makefile_Shd
+# $@ 	Le nom de la cible
+# $^ 	La liste des dépendances
+
+CC=gcc
+AR=ar
+ARFLAGS=cr
+CFLAGS=-c -fPIC
+LFLAGS=-L. -ltest
+
+CIBLE=app
+
+all:$(CIBLE)
+
+$(CIBLE): app.o libtest.so
+	$(CC) -static -o $(CIBLE) app.o $(LFLAGS)
+
+app.o:app.c
+	$(CC) -c $^ -o $@
+
+# shared
+libtest.so: test1.o test2.o
+	$(CC) -shared -fPIC -o $@ $^
+
+test1.o: test1.c
+	$(CC) $(CFLAGS) $^
+test2.o: test2.c
+	$(CC) $(CFLAGS) $^
+
+clean:
+	rm -f *.o *.a *.sa *.so *~ $(CIBLE)
