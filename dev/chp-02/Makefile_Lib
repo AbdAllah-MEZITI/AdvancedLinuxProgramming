@@ -1,0 +1,34 @@
+# usage : make --file=Makefile_Lib
+# $@ 	Le nom de la cible
+# $^ 	La liste des dépendances
+
+CC=gcc
+AR=ar
+ARFLAGS=cr
+CFLAGS=
+LFLAGS=-L. -ltest
+
+CIBLE=app
+
+all:$(CIBLE)
+
+$(CIBLE): app.o libtest.a
+	$(CC) -o $(CIBLE) app.o $(LFLAGS)
+
+app.o:app.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+# archive
+libtest.a: test1.o test2.o
+	$(AR) $(ARFLAGS) $@ $^
+
+test1.o: test1.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+test2.o: test2.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+
+clean:
+	rm -f *.o *.a *.sa *~ $(CIBLE)
+      
+      
