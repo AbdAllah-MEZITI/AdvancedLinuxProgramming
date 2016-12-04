@@ -5,7 +5,7 @@
 CC=gcc
 AR=ar
 ARFLAGS=cr
-CFLAGS=
+CFLAGS=-c
 LFLAGS=-L. -ltest
 
 CIBLE=app
@@ -16,19 +16,17 @@ $(CIBLE): app.o libtest.a
 	$(CC) -o $(CIBLE) app.o $(LFLAGS)
 
 app.o:app.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 # archive
 libtest.a: test1.o test2.o
 	$(AR) $(ARFLAGS) $@ $^
 
 test1.o: test1.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 test2.o: test2.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 
 clean:
 	rm -f *.o *.a *.sa *~ $(CIBLE)
-      
-      
