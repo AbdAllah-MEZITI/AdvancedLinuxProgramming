@@ -1,31 +1,34 @@
 # usage : make --file=Makefile_Shd
 # $@ 	Le nom de la cible
 # $^ 	La liste des dépendances
+# rpath : runtime path
 
 CC=gcc
-AR=ar
-ARFLAGS=cr
-CFLAGS=-c -fPIC
-LFLAGS=-L. -ltest
+CFLAGS=-c -fPIC -g -Wall
+MFLAGS=-Wl,-rpath=.
 
-CIBLE=app
+SRC_LIB= test1.c test2.c
+OBJ_LIB= $(SRC_LIB:.c=.o)
 
-all:$(CIBLE)
+LIBNAME=test
+#SHARED=lib$(LIBNAME).so.1.0.1
+SHARED=lib$(LIBNAME).so
+#SFLAGS=-shared -lc -Wl,-soname,lib$(LIBNAME).so.1
+SFLAGS=-shared -lc
 
-$(CIBLE): app.o libtest.so
-	$(CC) -static -o $(CIBLE) app.o $(LFLAGS)
+EXEC=app
 
-app.o:app.c
-	$(CC) -c $^ -o $@
 
-# shared
-libtest.so: test1.o test2.o
-	$(CC) -shared -fPIC -o $@ $^
+all : $(EXEC)
 
-test1.o: test1.c
-	$(CC) $(CFLAGS) $^
-test2.o: test2.c
-	$(CC) $(CFLAGS) $^
+$(EXEC) : $(EXEC).c $(SHARED)
+	$(CC) $^ -o $(EXEC) $(MFLAGS)
 
-clean:
-	rm -f *.o *.a *.sa *.so *~ $(CIBLE)
+$(SHARED) : $(OBJ_LIB)
+	$(CC) $(SFLAGS) $^ -o $(SHARED)
+
+%.o : %.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+clean :
+	rm -rf *.o *.so *.so* *~ $(EXEC)

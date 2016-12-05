@@ -1,4 +1,8 @@
-int main()
+#include <stdio.h>
+
+int main(int argc, char* argv)
 {
-  return ( f () + g () );
+  printf("Return : %d\n", f () + g () );
+
+  return 0;
 }
